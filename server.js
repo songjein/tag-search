@@ -11,9 +11,39 @@ console.log(mapping);
 
 server.get('/search', (req, res) => {
 	const tag = req.query.tag;
-	console.log(tag);
+	candidate = []
 
-	res.send(mapping[tag]);
+	for (let i = 0 ; i < tag.length; i ++){
+		candidate = candidate.concat(mapping[tag[i]]);
+	}
+
+	// Word Count
+	tmp = {}
+	for (let i = 0 ; i < candidate.length; i ++) {
+		if (candidate[i] in tmp) {
+			tmp[candidate[i]] += 1;
+		} else {
+			tmp[candidate[i]] = 1;
+		}
+	} 
+	
+	// Counting Sort
+	buffer = [];
+	const max_len = 50;
+	for (let i = 0 ; i < max_len ; i ++ ) {
+		buffer[i] = [];	
+	}
+	for (let key in tmp){
+		buffer[tmp[key]].push(key);
+	}
+	
+	// Make sorted result
+	ret = []
+	for (let i = max_len - 1; i > 0 ; i --) {
+		ret = ret.concat(buffer[i]);
+	}
+
+	res.send(ret);
 });
 
 server.listen(port, () => {
