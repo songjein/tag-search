@@ -1,17 +1,15 @@
 const fs = require('fs')
 const express = require('express')
 
+const cors = require('cors');
+
 const server = express()
 const port = 5555
 
 const data = fs.readFileSync('mapping.json')
 const mapping = JSON.parse(data)
 
-server.all('/*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
+server.use(cors());
 
 server.get('/search', (req, res) => {
 	const tag = req.query.tag
